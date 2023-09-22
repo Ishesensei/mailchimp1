@@ -40,7 +40,7 @@ logAllList();
 app.get("/", async (req, res) => {
   res.sendFile(__dirname + "public/signup.html");
 });
-// 2 create subscribed contact
+// 2nd create subscribed contact
 const listId = process.env.LISTID;
 app.post("/", async (req, res) => {
   var firstName = req.body.fName;
@@ -48,27 +48,30 @@ app.post("/", async (req, res) => {
   var email = req.body.email;
   console.log(`page sent data::::  ` + firstName, lastName, email);
 
+  var memberdata = {
+    members: [
+      {
+        
+    email_address: email,
+    status: "subscribed",
+    merge_fields: {
+      FNAME: firstName,
+      LNAME: lastName,
+    },
+    vip: true,
+
+  
+      }
+    ]
+  };
   async function run() {
     try {
-      const response = await mailchimp.lists.updateListMember(listId, {
-        email_address: email,
-        status: "subscribed",
-        merge_fields: {
-          FNAME: firstName,
-          LNAME: lastName,
-        },
-      });
-
-      console.log(
-        `Successfully added contact as an audience member. The contact's id is ${response.id}.`
-      );
-
+      http.request(url[, options][, callback])
       // Respond to the client indicating success if needed
       res.status(200).json({ message: "Subscriber added successfully" });
     } catch (error) {
       // Handle errors
       console.error("Error while adding subscriber:", error);
-
       // Respond to the client with an error status and message
       res.status(500).json({ message: "Failed to add subscriber" });
     }
