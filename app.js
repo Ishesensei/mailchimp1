@@ -51,27 +51,33 @@ app.post("/", async (req, res) => {
   var memberdata = {
     members: [
       {
-        
-    email_address: email,
-    status: "subscribed",
-    merge_fields: {
-      FNAME: firstName,
-      LNAME: lastName,
-    },
-    vip: true,
-
-  
-      }
-    ]
+        email_address: email,
+        status: "subscribed",
+        merge_fields: {
+          FNAME: firstName,
+          LNAME: lastName,
+        },
+        vip: true,
+      },
+    ],
   };
   async function run() {
     try {
-      http.request(url[, options][, callback])
+      // http.request(url[, options][, callback])
       // Respond to the client indicating success if needed
-      res.status(200).json({ message: "Subscriber added successfully" });
+      res
+        .status(200)
+        .send(
+          `<div style="color:red; display:flex;justify-content: center;"><h1>Subscriber added successfully</h1></div>`
+        );
     } catch (error) {
       // Handle errors
       console.error("Error while adding subscriber:", error);
+      var objError = JSON.parse(error.response.text);
+      res.send(
+        `<div style="color:red; display:flex;justify-content: center;"><h1>${objError.detail}</h1></div>`
+      );
+
       // Respond to the client with an error status and message
       res.status(500).json({ message: "Failed to add subscriber" });
     }
