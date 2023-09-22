@@ -1,0 +1,43 @@
+.env
+# Ignore temporary files and directories
+.tmp/
+.temp/
+*.swp
+*.swo
+*.swn
+.DS_Store
+# Ignore build and compiled artifacts
+node_modules
+build
+dist
+target
+out
+bin
+*.log
+# Ignore Windows system files
+Thumbs.db
+# Ignore compiled binaries
+*.exe
+*.out
+# Ignore logs and data files
+*.log
+*.sql
+*.sqlite
+*.tmp
+# Ignore configuration files with sensitive information
+config.js
+config.json
+config.yaml
+config.yml
+*.config.js
+*.config.json
+*.config.yaml
+*.config.yml
+# Ignore package-lock files
+package-lock.json
+yarn.lock
+# Ignore binaries and executables
+*.exe
+*.dll
+*.so
+*.dylib
