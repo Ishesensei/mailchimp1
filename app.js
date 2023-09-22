@@ -50,7 +50,7 @@ app.post("/", async (req, res) => {
 
   async function run() {
     try {
-      const response = await mailchimp.lists.updateListMember(listId, {
+      const response = await mailchimp.lists.addListMember(listId, {
         email_address: email,
         status: "subscribed",
         merge_fields: {
