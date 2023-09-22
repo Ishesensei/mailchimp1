@@ -58,19 +58,23 @@ app.post("/", async (req, res) => {
           LNAME: lastName,
         },
       });
-
+      console.log('!!response --->', response);
+      
       console.log(
         `Successfully added contact as an audience member. The contact's id is ${response.id}.`
       );
 
       // Respond to the client indicating success if needed
-      res.status(200).json({ message: "Subscriber added successfully" });
+      res.status(200).send(`<div style="color:red; display:flex;justify-content: center;"><h1>Subscriber added successfully</h1></div>`);
     } catch (error) {
       // Handle errors
       console.error("Error while adding subscriber:", error);
+      var objError =JSON.parse(error.response.text)
+      res.send(`<div style="color:red; display:flex;justify-content: center;"><h1>${objError.detail}</h1></div>`)
 
       // Respond to the client with an error status and message
       res.status(500).json({ message: "Failed to add subscriber" });
+   
     }
   }
 
