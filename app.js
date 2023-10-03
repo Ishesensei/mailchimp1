@@ -6,6 +6,7 @@ const app = express();
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 const __dirname = dirname(fileURLToPath(import.meta.url)) + `/`;
+import https from "https";
 
 const port = process.env.PORT || 3000;
 
@@ -43,12 +44,12 @@ app.get("/", async (req, res) => {
 // 2nd create subscribed contact
 const listId = process.env.LISTID;
 app.post("/", async (req, res) => {
-  var firstName = req.body.fName;
-  var lastName = req.body.lName;
-  var email = req.body.email;
+  const firstName = req.body.fName;
+  const lastName = req.body.lName;
+  const email = req.body.email;
   console.log(`page sent data::::  ` + firstName, lastName, email);
 
-  var memberdata = {
+  const jsonMemberData = JSON.stringify({
     members: [
       {
         email_address: email,
@@ -60,10 +61,12 @@ app.post("/", async (req, res) => {
         vip: true,
       },
     ],
-  };
+  });
   async function run() {
+    const URI = `https://${process.env.CHIMP_PREFEX}.api.mailchimp.com/3.0/lists/${process.env.LISTID}`;
+    const option = 
     try {
-      // http.request(url[, options][, callback])
+      https.request(URI, option, (res) => {});
       // Respond to the client indicating success if needed
       res
         .status(200)
