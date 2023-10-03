@@ -58,7 +58,7 @@ app.post("/", async (req, res) => {
           LNAME: lastName,
         },
       });
-      console.log('!!response --->', response);
+      console.log('!!response (status) --->', response.status);
       
       console.log(
         `Successfully added contact as an audience member. The contact's id is ${response.id}.`
