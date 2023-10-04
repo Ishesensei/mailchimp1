@@ -38,15 +38,26 @@ app.post("/", async (req, res) => {
   //
 
   //
+  //
+  const data = {
+    members: [
+      {
+        email_address: email,
+        status: "subscribed",
+        merge_fields: {
+          FNAME: firstName,
+          LNAME: lastName,
+        },
+      },
+    ],
+  };
+  const jsonData = JSON.stringify(data);
 
   const options = {
-    url: 
-    hostname: "us21.api.mailchimp.com",
-    path: "/3.0/lists/d3566d63fb",
+    url: `${server}.api.mailchimp.com/3.0/lists/${listId}`,
     method: "POST",
-    // headers: {
-    //   "Authorization": `theo 095962d224a34133cc45ce33a1f294b8-us21`,
-    // },
+    headers: { "Authorization": `mykey ${apiKey}` },
+    body: jsonData,
   };
 
   const request = https.request(options, (error, res, body) => {
@@ -59,6 +70,16 @@ app.post("/", async (req, res) => {
   });
 
   request.end();
+
+  // try {
+  //   const request = https.request(options, (res, body) => {
+  //     console.log("statusCode:", res.statusCode);
+  //     // console.log('headers:', res.headers);
+  //   });
+  //   request.end();
+  // } catch (error) {
+  //   console.log("!!error mm ---");
+  // }
 
   //
 
