@@ -1,91 +1,57 @@
-// import mailchimp from "@mailchimp/mailchimp_marketing";
-import dotenv from "dotenv";
-dotenv.config();
 import express from "express";
+import https from "https";
 const app = express();
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-const __dirname = dirname(fileURLToPath(import.meta.url)) + `/`;
-import https, { request } from "https";
-const port = process.env.PORT || 3000;
-//-----------------------------------------------------------
-
+import dotenv from "dotenv";
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(`public`));
-app.set("view engine", `ejs`);
-//-----------------------------------------------------------
+app.use(express.static("public"));
 
 // mailchip setting
 const apiKey = process.env.theoNewsletterkey;
 const server = process.env.CHIMP_PREFEX;
 const listId = process.env.LISTID;
 
-// handlers/
-// 1 handle home page
-//--------------------------------------------
-app.get("/", async (req, res) => {
-  res.sendFile(__dirname + "public/signup.html");
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/signup.html");
 });
-// 2nd create subscribed contact
-//--------------------------------------------
-app.post("/", async (req, res) => {
-  //
 
-  //
-  const firstName = req.body.fName;
-  const lastName = req.body.lName;
+app.post("/", (req, res) => {
+  const firstname = req.body.firstname;
+  const lastname = req.body.lastname;
   const email = req.body.email;
-  //
-
-  //
-  //
   const data = {
     members: [
       {
         email_address: email,
         status: "subscribed",
         merge_fields: {
-          FNAME: firstName,
-          LNAME: lastName,
+          FNAME: firstname,
+          LNAME: lastname,
         },
       },
     ],
   };
-  const jsonData = JSON.stringify(data);
-
+  const jsondata = JSON.stringify(data);
+  const url = "https://us21.api.mailchimp.com/3.0/lists/" + listId;
   const options = {
-    url: `${server}.api.mailchimp.com/3.0/lists/${listId}`,
     method: "POST",
-    headers: { "Authorization": `mykey ${apiKey}` },
-    body: jsonData,
+    auth: "theo:" + apiKey,
   };
-
-  const request = https.request(options, (error, res, body) => {
-    if (error) {
-      console.log("!!error mm ---");
+  const request = https.request(url, options, (response) => {
+    if (response.statusCode === 200) {
+      res.sendFile(__dirname + "/success.html");
     } else {
-      console.log("statusCode:", res.statusCode);
-      // console.log('headers:', res.headers);
+      console.log(response.statusCode);
+      res.sendFile(__dirname + "/failure.html");
     }
   });
-
+  request.write(jsondata);
   request.end();
-
-  // try {
-  //   const request = https.request(options, (res, body) => {
-  //     console.log("statusCode:", res.statusCode);
-  //     // console.log('headers:', res.headers);
-  //   });
-  //   request.end();
-  // } catch (error) {
-  //   console.log("!!error mm ---");
-  // }
-
-  //
-
-  //
 });
-//--------------------------------------------
-// MAILCHIMP
 
-app.listen(port, console.log(`${port}: Running !`));
+app.post("/failure", (req, res) => {
+  res.redirect("/");
+});
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`running at ${process.env.PORT || 3000}`);
+});
