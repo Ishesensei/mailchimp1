@@ -3,19 +3,22 @@ import https from "https";
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
-import fileURLToPath from "url";
-import dirname from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 const __dirname = dirname(fileURLToPath(import.meta.url));
+console.log("!!__dirname --->", __dirname);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.set("view engine", "ejs");
 
 // mailchip setting
 const apiKey = process.env.theoNewsletterkey;
+const apiKey2 = process.env.theoNewsletterkey2;
 const server = process.env.CHIMP_PREFEX;
 const listId = process.env.LISTID;
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/signup.html");
+  res.sendFile(__dirname + "/public/signup.html");
 });
 
 app.post("/", (req, res) => {
@@ -38,14 +41,15 @@ app.post("/", (req, res) => {
   const url = "https://us21.api.mailchimp.com/3.0/lists/" + listId;
   const options = {
     method: "POST",
-    auth: "theo:" + apiKey,
+    auth: "theo:" + apiKey2,
   };
   const request = https.request(url, options, (response) => {
     if (response.statusCode === 200) {
-      res.sendFile(__dirname + "/success.html");
+      console.log(response.statusCode);
+      res.sendFile(__dirname + "/public/success.html");
     } else {
       console.log(response.statusCode);
-      res.sendFile(__dirname + "/failure.html");
+      res.send("failure");
     }
   });
   request.write(jsondata);
