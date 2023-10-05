@@ -6,7 +6,7 @@ dotenv.config();
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 const __dirname = dirname(fileURLToPath(import.meta.url));
-console.log("!!__dirname --->", __dirname);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
@@ -22,8 +22,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-  const firstname = req.body.firstname;
-  const lastname = req.body.lastname;
+  const firstname = req.body.fName;
+  const lastname = req.body.lName;
   const email = req.body.email;
   const data = {
     members: [
@@ -41,7 +41,9 @@ app.post("/", (req, res) => {
   const url = "https://us21.api.mailchimp.com/3.0/lists/" + listId;
   const options = {
     method: "POST",
-    auth: "theo:" + apiKey2,
+    headers: {
+      "Authorization": `theo ${apiKey2}`
+    },
   };
   const request = https.request(url, options, (response) => {
     if (response.statusCode === 200) {
