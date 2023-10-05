@@ -2,6 +2,10 @@ import express from "express";
 import https from "https";
 const app = express();
 import dotenv from "dotenv";
+dotenv.config();
+import fileURLToPath from "url";
+import dirname from "path";
+const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
