@@ -20,7 +20,7 @@ const listId = process.env.LISTID;
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/signup.html");
 });
-
+//----------------------------------------------
 app.post("/", (req, res) => {
   const firstname = req.body.fName;
   const lastname = req.body.lName;
@@ -38,14 +38,14 @@ app.post("/", (req, res) => {
     ],
   };
   const jsondata = JSON.stringify(data);
-  const url = "https://us21.api.mailchimp.com/3.0/lists/" + listId;
   const options = {
+    url: `https://us21.api.mailchimp.com/3.0/lists/${listId}`,
     method: "POST",
     headers: {
-      "Authorization": `theo ${apiKey2}`
+      "Authorization": `theo ${apiKey2}`,
     },
   };
-  const request = https.request(url, options, (response) => {
+  const request = https.request(options, (response) => {
     if (response.statusCode === 200) {
       console.log(response.statusCode);
       res.sendFile(__dirname + "/public/success.html");
@@ -57,10 +57,7 @@ app.post("/", (req, res) => {
   request.write(jsondata);
   request.end();
 });
-
-app.post("/failure", (req, res) => {
-  res.redirect("/");
-});
+//----------------------------------------------
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`running at ${process.env.PORT || 3000}`);
